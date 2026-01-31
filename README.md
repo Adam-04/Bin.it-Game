@@ -1,2 +1,2 @@
 # Bin.it-Game
-An interactive game to help people about waste disposal.
+An interactive game to help people learn about waste disposal.

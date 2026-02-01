@@ -16,5 +16,4 @@ An interactive game to help people learn about waste disposal.
 ## Setup:
 - Run `npx expo start` to test expo app (run on expo go)
 - Run `Bin.it-Game\Bin-It\src\main\java\com\project\Bin_It\BinItApplication.java` in vscode and and open http://localhost:8080/game-home to find app running
-- Need to create .env file with neon credentials to test
-
+- Need to create .env file in Bin-It\ with neon credentials to establish neon database connection

@@ -51,6 +51,12 @@
         "projectId": "08c6b04f-f39b-41db-8718-80413f88048c"
       }
     },
-    "owner": "sadskier-org"
+    "owner": "sadskier-org",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/08c6b04f-f39b-41db-8718-80413f88048c"
+    }
   }
 }

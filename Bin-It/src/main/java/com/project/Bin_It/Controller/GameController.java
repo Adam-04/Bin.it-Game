@@ -1,13 +1,26 @@
 package com.project.Bin_It.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import com.project.Bin_It.Repository.*;
+
+@RestController
+@RequestMapping("/game")
+@CrossOrigin(origins = "*")
 public class GameController {
-    @GetMapping("/game-home")
-    public String showHomepage() {
-        return "game-home-page";
+
+    private final ReadTable readData = new ReadTable();
+    private final CreateTable createTable = new CreateTable();
+
+    @GetMapping("/books")
+    public ResponseEntity<?> getBooks() {
+        return ResponseEntity.ok(readData.readBooks());
     }
 
+    @PostMapping("/books/init")
+    public ResponseEntity<?> initBooks() {
+        createTable.initializeBooksTable();
+        return ResponseEntity.ok("Books table initialized");
+    }
 }

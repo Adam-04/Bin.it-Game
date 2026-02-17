@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class NeonConnection {
 
-    private static final Dotenv dotenv = Dotenv.configure().directory("./Bin-It").load();
+    private static final Dotenv dotenv = Dotenv.configure().load();
     private static final String CONN_STRING = dotenv.get("DATABASE_URL");
 
     public static Connection getConnection() throws SQLException {

@@ -17,3 +17,4 @@ An interactive game to help people learn about waste disposal.
 - Need to create .env file in root `Bin.it-Game/` directory with neon credentials to establish neon database connection
 - Run `Bin.it-Game\Bin-It\src\main\java\com\project\Bin_It\BinItApplication.java` in vscode
 - Run `npx expo start` to test expo app (run on expo go) and open console log to see successful post and get requests to neonDB: ![alt text](image.png)
+- Note: please drop books table from neonDB after done testing using neon extension:![alt text](image-1.png)

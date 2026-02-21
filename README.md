@@ -14,6 +14,6 @@ An interactive game to help people learn about waste disposal.
 - Install [Java Extension Pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
 
 ## Setup:
-- Run `npx expo start` to test expo app (run on expo go)
-- Run `Bin.it-Game\Bin-It\src\main\java\com\project\Bin_It\BinItApplication.java` in vscode and and open http://localhost:8080/game-home to find app running
-- Need to create .env file in Bin-It\ with neon credentials to establish neon database connection
+- Need to create .env file in root `Bin.it-Game/` directory with neon credentials to establish neon database connection
+- Run `Bin.it-Game\Bin-It\src\main\java\com\project\Bin_It\BinItApplication.java` in vscode
+- Run `npx expo start` to test expo app (run on expo go) and open console log to see successful post and get requests to neonDB: ![alt text](image.png)

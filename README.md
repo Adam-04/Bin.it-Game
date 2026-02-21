@@ -8,7 +8,6 @@ An interactive game to help people learn about waste disposal.
 - [Node.JS (LTS)](https://nodejs.org/en/download) 
 - May need to run `mvn clean compile` for backend initialization
 - May need to run `npm install` and `npm run start` for frontend initialization
-- 
 - Need to install `create-expo-app@3.5.3` package if not automatically installed
 - May need to install `npx expo install expo-dev-client`
 - Install [Java Extension Pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)

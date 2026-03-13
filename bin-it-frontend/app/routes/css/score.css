@@ -1,0 +1,209 @@
+/* ========================================================
+    CORE LAYOUT & GLOBAL STYLES (score page and background)
+   ======================================================== */
+
+.score-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(circle, #2980b9 0%, #1c5980 100%);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.main-content {
+    width: 100%;
+    z-index: 5;
+}
+
+/* ==========================================
+            UI FRAME (Logo and Signout)
+   ========================================== */
+.logo-image {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.exit-container {
+    position: absolute;
+    bottom: 2rem;   
+    right: 2rem;    
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;   
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+}
+
+.exit-container:hover {
+    transform: translateX(5px); 
+    color: #00ffa2; 
+}
+
+.exit-icon {
+    font-size: 1.5rem;
+}
+
+/* ==========================================
+        ARCADE MODE (Leaderboard) 
+   ========================================== */
+.leaderboard-container {
+    width: 90%;
+    max-width: 420px; 
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leaderboard-title {
+    color: white;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px; 
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 
+                2px 2px 0px #00796b;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 45px; 
+    margin-bottom: 8px; 
+    background-color: rgba(0, 0, 0, 0.25); 
+    border-radius: 6px;
+    overflow: hidden;
+    padding-right: 15px;
+    transition: transform 0.2s ease;
+}
+
+.rank-section {
+    width: 45px; 
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    font-weight: bold;
+    font-size: 0.9rem; 
+}
+
+.username-section {
+    flex-grow: 1;
+    padding-left: 15px;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem; 
+}
+
+.score-section {
+    flex-shrink: 0;
+    font-weight: bold;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+/* Highlight for the current User */
+.leaderboard-row.is-current-user {
+    background-color: #00796b;
+    border: 2px solid #00ffa2;
+    transform: scale(1.02); 
+    box-shadow: 0 0 10px rgba(0, 255, 162, 0.3);
+    }
+
+/* ==========================================
+        APPLY MODE (Score Box)
+   ========================================== */
+.apply-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    text-align: center;
+}
+
+.apply-title {
+    color: white;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 0;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 
+                2px 2px 0px #00796b;
+}
+
+.score-box {
+    border: 3px solid white;
+    padding: 1.5rem 3rem;
+    font-size: 2.5rem; 
+    font-family: 'Courier New', Courier, monospace;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 0px rgba(0, 0, 0, 0.2); 
+    min-width: 300px;
+}
+
+/* =================================================
+    BACKGROUND ENHANCEMENTS (Game Aesthetics)
+   ================================================== */
+
+.nebula-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1; /* Sits behind your text (z-index 10) */
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* This creates the "smoky" energy look */
+  opacity: 0.4;
+  mix-blend-mode: screen; /* Makes colors "glow" when they overlap */
+  animation: drift 20s infinite alternate ease-in-out;
+}
+
+/* Yellow Energy Blob */
+.blob-yellow {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #f1c40f 0%, transparent 70%);
+  top: -100px;
+  right: -100px;
+}
+
+/* Teal Energy Blob */
+.blob-teal {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #00ffa2 0%, transparent 70%);
+  bottom: -150px;
+  left: -150px;
+  animation-duration: 25s; /* Moves at a different speed */
+}
+
+/* Organic drifting animation */
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-100px, 100px) scale(1.2); }
+}

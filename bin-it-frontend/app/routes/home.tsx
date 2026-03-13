@@ -1,13 +1,17 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Bin-It - Welcome Page" },
+    { name: "description", content: "Welcome page for the Bin-It game" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div style={{ color: "white", padding: "20px" }}>
+      <h1>WELCOME TO BIN-IT</h1>
+      <p>This is where the user will choose their game mode.</p>
+    </div>
+  );
 }

@@ -7,7 +7,7 @@ import com.project.Bin_It.Repository.*;
 
 @RestController
 @RequestMapping("/game")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class GameController {
 
     private final ReadTable readData = new ReadTable();

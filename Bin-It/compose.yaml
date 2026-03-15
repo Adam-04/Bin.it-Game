@@ -9,11 +9,12 @@
 # https://github.com/docker/awesome-compose
 services:
   backend:
-    build: ./Bin-It
+    build:
+      context: .
     ports:
       - "8080:8080"
     env_file:
-      - ./Bin-It/.env
+      - .env
 
 
 # The commented out section below is an example of how to define a PostgreSQL

@@ -57,7 +57,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("${app.frontend-url}", "http://localhost:5173", "http://localhost:8080" ));
+        config.setAllowedOrigins(List.of("${app.frontend-url}", "http://localhost:5173", "http://localhost:3000" ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN", "Postman-Token", "Cache-Control", "Cookie"));
         config.setAllowCredentials(true);

@@ -22,11 +22,11 @@ const handleRegister = async (e: React.FormEvent) => {
 
     // Validation checks
     if (email !== confirmEmail) {
-      errorMessages.push("Emails do not match.");
+      errorMessages.push("Email Address and Confirm Email Address do not match.");
     }
 
     if (password !== confirmPassword) {
-      errorMessages.push("Passwords do not match.");
+      errorMessages.push("Password and Confirm Password do not match.");
     }
 
     

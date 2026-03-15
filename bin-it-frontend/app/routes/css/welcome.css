@@ -1,0 +1,90 @@
+
+/* ====================================
+        WELCOME PAGE LAYOUT (Page, and Logo)
+   ==================================== */
+.welcome-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle, #2980b9 0%, #1c5980 100%);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.welcome-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome-bg-logo {
+  position: absolute;
+  width: 200px; 
+  height: auto;
+  opacity: 0.2; 
+  filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.3));
+  z-index: 1;
+  animation: fadeInScale 1.5s ease-out;
+}
+
+.welcome-text-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  animation: fadeInScale 1.2s ease-out;
+}
+
+.welcome-title {
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(79, 172, 254, 0.6), 
+               3px 3px 0px rgba(0,0,0,0.4);
+  margin: 0;
+}
+
+.click-prompt {
+  color: #ffffff;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: pulse 2s infinite;
+}
+
+
+.welcome-page:hover .welcome-bg-logo {
+  opacity: 1.0;
+  transform: scale(1.1);
+  transition: all 0.5s ease;
+}
+
+
+
+/* ====================================
+        ANIMATIONS (Fade In, and Pulse)
+   ==================================== */
+@keyframes fadeInScale {
+  from { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

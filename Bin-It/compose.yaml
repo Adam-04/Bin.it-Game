@@ -12,9 +12,11 @@ services:
     build:
       context: .
     ports:
-      - "8080:8080"
+      - "443:443"
     env_file:
-      - .env
+      - /.env
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 
 # The commented out section below is an example of how to define a PostgreSQL

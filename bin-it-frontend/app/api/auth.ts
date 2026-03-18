@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/auth";
+const BASE_URL = "https://api.binit.online/auth";
 
 export const authApi = {
   // Login logic

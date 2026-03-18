@@ -34,3 +34,7 @@ build/
 
 ### Password and environment files ###
 .env
+
+# Docker image build artifacts
+*.tar.gz
+

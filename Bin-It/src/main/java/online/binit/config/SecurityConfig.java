@@ -1,6 +1,8 @@
 package online.binit.config;
 
 import online.binit.security.JwtAuthFilter;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
 
     private final JwtAuthFilter jwtAuthFilter;
 
@@ -57,7 +62,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("${app.frontend-url}", "http://localhost:5173", "http://localhost:3000" ));
+        config.setAllowedOrigins(List.of(frontendUrl, "http://localhost:5173", "http://localhost:3000" ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN", "Postman-Token", "Cache-Control", "Cookie"));
         config.setAllowCredentials(true);

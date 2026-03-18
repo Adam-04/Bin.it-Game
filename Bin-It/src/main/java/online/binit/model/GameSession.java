@@ -21,10 +21,6 @@ public class GameSession {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "mode", nullable = false)
-    private GameMode mode;
-
     @Column(name = "score", nullable = false)
     private int score;
 
@@ -41,9 +37,8 @@ public class GameSession {
 
     public GameSession() {}
 
-    public GameSession(UUID userId, GameMode mode, int score, LocalDateTime endedAt) {
+    public GameSession(UUID userId, int score, LocalDateTime endedAt) {
         this.userId = userId;
-        this.mode = mode;
         this.score = score;
         this.endedAt = endedAt;
     }
@@ -53,9 +48,6 @@ public class GameSession {
 
     public UUID getUserId() { return userId; }
     public void setUserId(UUID userId) { this.userId = userId; }
-
-    public GameMode getMode() { return mode; }
-    public void setMode(GameMode mode) { this.mode = mode; }
 
     public int getScore() { return score; }
     public void setScore(int score) { this.score = score; }
@@ -68,6 +60,6 @@ public class GameSession {
 
     @Override
     public String toString() {
-        return "GameSession{id=" + id + ", userId=" + userId + ", mode=" + mode + ", score=" + score + "}";
+        return "GameSession{id=" + id + ", userId=" + userId + ", score=" + score + "}";
     }
 }

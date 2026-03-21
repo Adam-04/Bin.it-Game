@@ -313,9 +313,17 @@ html, body {
 
 .leaderboard-row.is-current-user {
   background-color: #00796b;
-  border: 2px solid #00ffa2;
-  transform: scale(1.02);
-  box-shadow: 0 0 10px rgba(0, 255, 162, 0.3);
+  border: 2px solid var(--accent-green);
+  transform: scale(1.04);
+  box-shadow: 0 0 15px rgba(0, 255, 162, 0.4);
+  z-index: 2;
+}
+
+.leaderboard-row.is-current-user .username-section,
+.leaderboard-row.is-current-user .score-section,
+.leaderboard-row.is-current-user .rank-section {
+  color: var(--accent-green);
+  text-shadow: 0 0 5px rgba(0, 255, 162, 0.2);
 }
 
 .apply-container {

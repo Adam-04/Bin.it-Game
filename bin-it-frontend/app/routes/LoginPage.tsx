@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
-import { authApi } from "../api/auth";
+import { authApi } from "../api/api.auth";
 import "../app.css";
 
 export default function LoginPage() {
@@ -16,6 +16,7 @@ export default function LoginPage() {
     try {
       const data = await authApi.login(username, password);
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId); // Store userId for later use
       navigate("/");
     } catch (err: any) {
       setError("Invalid username or password.");

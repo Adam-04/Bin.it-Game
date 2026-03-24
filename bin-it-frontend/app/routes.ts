@@ -1,11 +1,17 @@
 import { type RouteConfig, route, index } from "@react-router/dev/routes";
 
 export default [
-    // This makes the Login page load at "/" and removes the need for route("login")
+    // This makes the Welcome page load at "/" 
     index("routes/WelcomePage.tsx"), 
     
+    // Auth
     route("register", "routes/RegisterPage.tsx"),
     route("login", "routes/LoginPage.tsx"),
+
+    // Main pages
     route("home", "routes/home.tsx"),
+    route("game", "routes/game.tsx"), // Added from origin/frontend
+
+    // Score
     route("score/:mode", "routes/ScorePage.tsx"),
 ] satisfies RouteConfig;

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useState, useEffect } from "react";
 import { scoreApi, type LeaderboardEntry } from "../api/api.score";
 import { handleSignOut } from "../utils/utils.auth";
@@ -6,6 +6,7 @@ import "../app.css";
 
 export default function ScoreScreen() {
   const { mode } = useParams();
+  const navigate = useNavigate();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,8 +72,8 @@ export default function ScoreScreen() {
         )}
       </main>
 
-      <button onClick={handleSignOut} className="exit-container" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-        <span>Sign Out</span>
+      <button onClick={() => navigate("/homepage")} className="exit-container" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+        <span>HOMEPAGE</span>
         <span className="exit-icon">🚪</span>
       </button>
     </div>

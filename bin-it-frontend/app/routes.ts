@@ -14,4 +14,7 @@ export default [
 
     // Score
     route("score/:mode", "routes/ScorePage.tsx"),
+
+    // Homepage
+    route("homepage", "routes/HomePage.tsx"),
 ] satisfies RouteConfig;

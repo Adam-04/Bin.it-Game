@@ -17,7 +17,7 @@ export default function LoginPage() {
       const data = await authApi.login(username, password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId); // Store userId for later use
-      navigate("/");
+      navigate("/homepage");
     } catch (err: any) {
       setError("Invalid username or password.");
     } finally {

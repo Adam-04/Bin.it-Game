@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import "../app.css";
 
 type WasteItem = {
   name: string;
   type: string;
-  emoji: string;
+  emoji?: string;
+  image?: string;
 };
 
 const wasteItems: WasteItem[] = [
@@ -17,10 +17,6 @@ const wasteItems: WasteItem[] = [
   { name: "Styrofoam", type: "trash", emoji: "📦" },
   { name: "Glass Bottle", type: "recycling", emoji: "🍶" },
   { name: "Paint Can", type: "special", emoji: "🎨" },
-  { name: "Food Scraps", type: "compost", emoji: "🥗" },
-  { name: "Aluminum Can", type: "recycling", emoji: "🥫" },
-  { name: "Light Bulb", type: "special", emoji: "💡" },
-  { name: "Plastic Bag", type: "trash", emoji: "🛍️" },
 ];
 
 const bins = [
@@ -31,223 +27,153 @@ const bins = [
 ];
 
 export default function Game() {
+
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState<string | null>(null);
-  const [gameActive, setGameActive] = useState(false);
-  const [currentItem, setCurrentItem] = useState<WasteItem | null>(null);
-  const [score, setScore] = useState(0);
-  const [itemsSorted, setItemsSorted] = useState(0);
-  const [correctSorts, setCorrectSorts] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [feedback, setFeedback] = useState("");
+  const [currentItem, setCurrentItem] = useState<WasteItem>(
+    wasteItems[Math.floor(Math.random() * wasteItems.length)]
+  );
 
-  function getRandomItem() {
-    const item = wasteItems[Math.floor(Math.random() * wasteItems.length)];
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [gameActive, setGameActive] = useState(true);
+
+  function getNextItem() {
+    const item =
+      wasteItems[Math.floor(Math.random() * wasteItems.length)];
     setCurrentItem(item);
   }
 
-  function startGame(selectedMode: string) {
-    setMode(selectedMode);
-    setGameActive(true);
-    setScore(0);
-    setItemsSorted(0);
-    setCorrectSorts(0);
-    setFeedback("");
+  useEffect(() => {
+    if (!gameActive) return;
 
-    if (selectedMode === "arcade") {
-      setTimeLeft(60);
-    }
+    const timer = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          clearInterval(timer);
+          setGameActive(false);
 
-    getRandomItem();
+          setTimeout(() => {
+            navigate("/score/arcade", { state: { score } });   //Navigates to ScorePage 
+          }, 500);
+
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameActive, score]);
+
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData("type", currentItem.type);
   }
 
-  useEffect(() => {
-    if (mode === "arcade" && gameActive && timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((t) => t - 1);
-      }, 1000);
+  function allowDrop(e: React.DragEvent) {
+    e.preventDefault();
+  }
 
-      return () => clearInterval(timer);
-    }
+  function handleDrop(e: React.DragEvent, binType: string) {
+    e.preventDefault();
 
-    if (timeLeft === 0 && mode === "arcade") {
-      endGame();
-    }
-  }, [timeLeft, gameActive]);
+    if (!gameActive) return;
 
-  function handleSort(binType: string) {
-    if (!currentItem) return;
+    const itemType = e.dataTransfer.getData("type");
 
-    const correct = currentItem.type === binType;
-
-    if (correct) {
+    if (itemType === binType) {
       setScore((s) => s + 10);
-      setCorrectSorts((c) => c + 1);
       setFeedback("✅ Correct!");
     } else {
       setScore((s) => Math.max(0, s - 5));
-      setFeedback(`❌ Wrong! Goes in ${currentItem.type}`);
+      setFeedback("❌ Wrong bin!");
     }
 
-    setItemsSorted((i) => i + 1);
-
     setTimeout(() => {
-      if (mode === "apply" && itemsSorted + 1 >= 10) {
-        endGame();
-      } else {
-        setFeedback("");
-        getRandomItem();
-      }
-    }, 1200);
+      setFeedback("");
+      getNextItem();
+    }, 700);
   }
-
-  function endGame() {
-    setGameActive(false);
-
-    navigate("/score/apply", {
-      state: {
-        score,
-        itemsSorted,
-        correctSorts,
-      },
-    });
-  }
-
-  /* =========================
-     MODE SELECTION SCREEN
-     ========================= */
-
-  if (!mode) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#071024",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          gap: "25px",
-          color: "white",
-        }}
-      >
-        <img
-          src="/Gemini-Logo.png"
-          style={{ width: "200px" }}
-        />
-
-        <h1 style={{ fontSize: "2.5rem" }}>Choose Game Mode</h1>
-
-        <button
-          onClick={() => startGame("apply")}
-          style={buttonStyle}
-        >
-          🧠 Practice Mode
-        </button>
-
-        <button
-          onClick={() => startGame("arcade")}
-          style={buttonStyle}
-        >
-          ⚡ Arcade Mode
-        </button>
-      </div>
-    );
-  }
-
-  /* =========================
-     GAME SCREEN
-     ========================= */
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#071024",
-        color: "white",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: "40px",
-      }}
-    >
-      <img
-        src="/Gemini-Logo.png"
-        style={{ width: "150px", marginBottom: "20px" }}
-      />
+    <div style={{
+      minHeight: "100vh",
+      background: "#071024",
+      color: "white",
+      textAlign: "center",
+      paddingTop: "40px"
+    }}>
+      <h1>Bin.IT Waste Sorting Game</h1>
 
-      <h2>Sort the Waste!</h2>
-
-      <div style={{ marginBottom: "10px" }}>
-        Score: <b>{score}</b>
-      </div>
-
-      {mode === "arcade" && (
-        <div style={{ marginBottom: "15px" }}>
-          ⏱ Time Left: <b>{timeLeft}</b>
-        </div>
-      )}
-
-      {currentItem && (
-        <div
-          style={{
-            background: "#0f1b3d",
-            padding: "30px",
-            borderRadius: "15px",
-            textAlign: "center",
-            marginBottom: "25px",
-          }}
-        >
-          <div style={{ fontSize: "60px" }}>
-            {currentItem.emoji}
-          </div>
-
-          <div style={{ fontSize: "22px" }}>
-            {currentItem.name}
-          </div>
-        </div>
-      )}
+      <h2>Score: {score}</h2>
+      <h2>⏱ Time Left: {timeLeft}</h2>
 
       <div
+        draggable={gameActive}
+        onDragStart={handleDragStart}
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "15px",
-          width: "300px",
+          margin: "40px auto",
+          width: "160px",
+          height: "160px",
+          background: "#0f1b3d",
+          borderRadius: "15px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "50px",
+          cursor: "grab"
         }}
       >
+        {currentItem.image ? (
+          <img src={currentItem.image} style={{ width: "80px" }} />
+        ) : (
+          <div>{currentItem.emoji}</div>
+        )}
+
+        <div style={{ fontSize: "16px" }}>
+          {currentItem.name}
+        </div>
+      </div>
+
+      <p>Drag the item into the correct bin</p>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4,150px)",
+        gap: "20px",
+        justifyContent: "center",
+        marginTop: "30px"
+      }}>
         {bins.map((bin) => (
-          <button
+          <div
             key={bin.type}
-            style={buttonStyle}
-            onClick={() => handleSort(bin.type)}
+            onDrop={(e) => handleDrop(e, bin.type)}
+            onDragOver={allowDrop}
+            style={{
+              height: "160px",
+              background: "#0f1b3d",
+              borderRadius: "12px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "40px",
+              border: "3px solid #1bd98b"
+            }}
           >
-            {bin.emoji} {bin.name}
-          </button>
+            <div>{bin.emoji}</div>
+            <div style={{ fontSize: "14px" }}>{bin.name}</div>
+          </div>
         ))}
       </div>
 
       {feedback && (
-        <div style={{ marginTop: "20px", fontSize: "18px" }}>
+        <div style={{ marginTop: "30px", fontSize: "22px" }}>
           {feedback}
         </div>
       )}
     </div>
   );
 }
-
-/* =========================
-   BUTTON STYLE
-   ========================= */
-
-const buttonStyle = {
-  padding: "12px",
-  fontSize: "16px",
-  borderRadius: "8px",
-  border: "none",
-  cursor: "pointer",
-  background: "#1bd98b",
-  color: "#07211a",
-  fontWeight: "bold",
-};

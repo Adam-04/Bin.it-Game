@@ -40,7 +40,7 @@ public class SecurityConfig {
             // CSRF enabled for web app - uses cookie-based token
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringRequestMatchers("/auth/login", "/auth/register")
+                .ignoringRequestMatchers("/auth/login", "/auth/register", "/progress/**")
             )
             // CORS configuration
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))

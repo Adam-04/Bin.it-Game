@@ -17,4 +17,7 @@ export default [
 
     // Homepage
     route("homepage", "routes/HomePage.tsx"),
+
+    // Lesson page
+    route("lessons/:lessonTitle", "routes/LessonsPage.tsx")
 ] satisfies RouteConfig;

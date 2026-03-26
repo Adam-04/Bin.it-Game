@@ -1,21 +1,25 @@
 package online.binit.config;
 
-import java.util.List;
+import online.binit.security.JwtAuthFilter;
+import online.binit.model.UserDetail;
+import online.binit.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import online.binit.security.JwtAuthFilter;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -24,9 +28,11 @@ public class SecurityConfig {
     private String frontendUrl;
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserRepository userRepository) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.userRepository = userRepository;
     }
 
     @Bean
@@ -39,8 +45,7 @@ public class SecurityConfig {
         http
             // CSRF enabled for web app - uses cookie-based token
             .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringRequestMatchers("/auth/login", "/auth/register", "/progress/**")
+                .ignoringRequestMatchers("/auth/**", "/game/**", "/leaderboard/**", "/waste/**", "/lessons/**", "/progress/**")
             )
             // CORS configuration
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -60,11 +65,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            UserDetail user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getUsername())
+                    .password(user.getPasswordHash())
+                    .authorities(Collections.emptyList())
+                    .build();
+        };
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(frontendUrl, "http://localhost:5173", "http://localhost:3000" ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN", "Postman-Token", "Cache-Control", "Cookie"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

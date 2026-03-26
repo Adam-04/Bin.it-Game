@@ -73,6 +73,54 @@ const bins = [
   { type: "special",   name: "Hazardous", closed: hazardBinClosed, open: hazardBinOpen },
 ];
 
+const imageMap: Record<string, string> = {
+  "trash/styrofoamPlate":        styrofoam,
+  "trash/babyWipes":             babyWipes,
+  "trash/brickAndTextiles":      brick,
+  "trash/clinicalMask":          clinicalMask,
+  "trash/diaper":                diaper,
+  "trash/disposableFastfoodCup": fastFoodCup,
+  "trash/garbageBag":            garbageBag,
+  "trash/sponges":               sponges,
+  "trash/toothpaste":            toothpaste,
+  "trash/waterHose":             waterhose,
+  "recycling/glassJar":          glassBottle,
+  "recycling/crumpledPaper":     paper,
+  "recycling/plasticBottle":     plasticBottle,
+  "recycling/cardboardBox":      cardboardBox,
+  "recycling/detergentBottle":   detergentBottle,
+  "recycling/eggCartoon":        eggCarton,
+  "recycling/foilTray":          foilTray,
+  "recycling/foodCan":           foodCan,
+  "recycling/newspaper":         newsPaper,
+  "recycling/wineBottle":        wineBottle,
+  "compost/appleCore":           appleCore,
+  "compost/bananaPeel":          bananaPeel,
+  "compost/coffeeGrounds":       coffeeGrounds,
+  "compost/deadLeaves":          deadLeaves,
+  "compost/eggshells":           eggShells,
+  "compost/friedChickenBones":   friedChickenBones,
+  "compost/leftoverTakeout":     leftoverTakeout,
+  "compost/moldyCheese":         moldyCheese,
+  "compost/oldFlowers":          oldFlowers,
+  "compost/yardRemains":         yardRemains,
+  "special/paintBucket":         paintCan,
+  "special/batteries":           battery,
+  "special/brokenLaptop":        laptop,
+  "special/brokenPhone":         phone,
+  "special/carBattery":          carBattery,
+  "special/gasCylinder":         gasCylinder,
+  "special/lightbulb":           lightbulb,
+  "special/motorOil":            motorOil,
+  "special/pesticide":           pesticide,
+  "special/sprayCan":            sprayCan,
+};
+
+//  ADDITION: helper to read the CSRF cookie Spring Security sets 
+function getCsrfToken(): string {
+  return document.cookie.split("; ").find((c) => c.startsWith("XSRF-TOKEN="))?.split("=")[1] ?? "";
+}
+
 const wasteItems: WasteItem[] = [
   // Trash
   { name: "Styrofoam Plate",   type: "trash", image: styrofoam     },
@@ -130,17 +178,76 @@ export default function Game() {
     wasteItems[Math.floor(Math.random() * wasteItems.length)]
   );
   const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+
   const [feedback, setFeedback] = useState("");
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameActive, setGameActive] = useState(true);
   const [hoveredBin, setHoveredBin] = useState<string | null>(null);
 
+  const [itemPool, setItemPool] = useState<WasteItem[]>(wasteItems); 
+
   // Tracks the floating ghost image position during touch drag
   const [touchPos, setTouchPos] = useState<{ x: number; y: number } | null>(null);
   const isDraggingTouch = useRef(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8080/waste/random/arcade", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+      .then((data: { garbageType: string; path: string }[]) => {
+        const mapped: WasteItem[] = data
+          .map((item) => ({
+            name: item.path.split("/").pop()!.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase()).trim(),
+            type: item.garbageType,
+            image: imageMap[item.path] ?? "",
+          }))
+          .filter((item) => item.image !== "");
+        if (mapped.length > 0) {
+          const shuffled = [...mapped].sort(() => Math.random() - 0.5);
+          setItemPool(shuffled);
+          setCurrentItem(shuffled[Math.floor(Math.random() * shuffled.length)]);
+        }
+      })
+      .catch((err) => console.warn("Using local fallback items:", err));
+  }, []);
+
+  async function submitScore(finalScore: number): Promise<void> {
+    const userId = localStorage.getItem("userId");
+    const token  = localStorage.getItem("token");
+
+    console.log("userId:", userId);  // add this
+    console.log("token:", token);    // add this
+
+    if (!userId || !token) return;
+
+    try {
+      const res = await fetch("http://localhost:8080/game/arcade/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: userId,
+          score: finalScore
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Score submit failed:", text);
+      }
+
+    } catch (err) {
+      console.error("Score submission error:", err);
+    }
+  }
+
   function getNextItem() {
-    const item = wasteItems[Math.floor(Math.random() * wasteItems.length)];
+    const item = itemPool[Math.floor(Math.random() * itemPool.length)]; 
     setCurrentItem(item);
   }
 
@@ -152,9 +259,9 @@ export default function Game() {
         if (t <= 1) {
           clearInterval(timer);
           setGameActive(false);
-          setTimeout(() => {
-            navigate("/score/arcade", { state: { score } });
-          }, 500);
+          submitScore(scoreRef.current).finally(() => {
+            navigate("/score/arcade", { state: { score: scoreRef.current } });
+          });
           return 0;
         }
         return t - 1;
@@ -162,7 +269,7 @@ export default function Game() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameActive, score, navigate]);
+  }, [gameActive, navigate]);
 
   //  Mouse drag handlers 
   function handleDragStart(e: React.DragEvent) {
@@ -223,10 +330,10 @@ export default function Game() {
   //  Shared scoring logic 
   function resolveItem(binType: string) {
     if (currentItem.type === binType) {
-      setScore((s) => s + 10);
+      setScore((s) => { scoreRef.current = s + 10; return s + 10; });
       setFeedback("✅ Correct!");
     } else {
-      setScore((s) => Math.max(0, s - 5));
+      setScore((s) => { scoreRef.current = Math.max(0, s - 5); return Math.max(0, s - 5); });
       setFeedback("❌ Wrong bin!");
     }
 
@@ -266,7 +373,7 @@ export default function Game() {
           onTouchEnd={handleTouchEnd}
           className="auth-card"
           style={{
-            margin: "0 auto 1rem",
+            margin: "0 auto 1.5rem",
             width: "40vw",
             height: "40vw",
             maxWidth: "180px",
@@ -279,7 +386,7 @@ export default function Game() {
             cursor: gameActive ? "grab" : "default",
             // Hide the original card while touch-dragging so only the ghost shows
             opacity: touchPos ? 0 : 1,
-            transition: "opacity 0.01s"
+            transition: "opacity 0.1s"
           }}
         >
           <img src={currentItem.image} style={{ width: "100%", height: "100%", objectFit: "fill" }} alt={currentItem.name} />
@@ -300,7 +407,7 @@ export default function Game() {
               width: "90px",
               height: "90px",
               objectFit: "contain",
-              pointerEvents: "none", // so it doesn't block elementFromPoint
+              pointerEvents: "none", 
               zIndex: 9999,
               opacity: 0.85,
             }}
@@ -332,7 +439,7 @@ export default function Game() {
           {bins.map((bin) => (
             <div
               key={bin.type}
-              data-bin-type={bin.type}  // used by elementFromPoint to identify the bin
+              data-bin-type={bin.type}  
               onDrop={(e) => handleDrop(e, bin.type)}
               onDragOver={(e) => { allowDrop(e); setHoveredBin(bin.type); }}
               onDragLeave={() => setHoveredBin(null)}
@@ -346,7 +453,6 @@ export default function Game() {
                 alignItems: "center",
                 transition: "transform 0.2s ease",
                 cursor: "pointer",
-                // Highlight the bin when hovered during touch drag
                 outline: hoveredBin === bin.type ? "2px solid var(--accent-teal)" : "none",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}

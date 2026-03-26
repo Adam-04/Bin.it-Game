@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import "../app.css";
 
+const backendUrl = "http://localhost:8080";
+
 // Bin Images
 import blackBinClosed from "../images/trashCans/blackBinClosed.png"
 import blackBinOpen from "../images/trashCans/blackBinOpen.png"
@@ -171,7 +173,6 @@ const wasteItems: WasteItem[] = [
 export default function Apply() {
   const navigate = useNavigate();
 
-  // queue holds the 10 items for this round; index tracks which one we're on
   const [queue, setQueue] = useState<WasteItem[]>(() =>
     [...wasteItems].sort(() => Math.random() - 0.5).slice(0, ROUND_SIZE)
   );
@@ -186,10 +187,9 @@ export default function Apply() {
 
   const currentItem = queue[index];
 
-  // Fetch items from backend on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/waste/random/apply", {
+    fetch(`${backendUrl}/waste/random/apply`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
@@ -217,7 +217,7 @@ export default function Apply() {
 
     try {
       isSubmitting.current = true;
-      const res = await fetch("http://localhost:8080/game/apply/submit", {
+      const res = await fetch(`${backendUrl}/game/apply/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -271,7 +271,6 @@ export default function Apply() {
     isSubmitting.current = false;
   }
 
-  // Mouse drag handlers
   function handleDragStart(e: React.DragEvent) {
     e.dataTransfer.setData("type", currentItem.type);
   }
@@ -287,7 +286,6 @@ export default function Apply() {
     resolveItem(binType);
   }
 
-  // Touch handlers
   function handleTouchStart(e: React.TouchEvent) {
     if (!gameActive) return;
     isDraggingTouch.current = true;
@@ -317,7 +315,6 @@ export default function Apply() {
     if (binType) resolveItem(binType);
   }
 
-  // Completion screen
   if (!gameActive) {
     return (
       <div className="page-container">
@@ -430,15 +427,17 @@ export default function Apply() {
           )}
         </div>
 
-        {/* WASTE BINS GRID */}
+        {/* WASTE BINS GRID — only changes: added padding/boxSizing to main, and capped grid width */}
         <div style={{
           display: "grid",
           gridTemplateColumns: window.innerWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-          gap: "8%",
+          gap: "7%",
           width: "100%",
-          maxWidth: "800px",
+          maxWidth: window.innerWidth < 600 ? "360px" : "600px",
           margin: "0 auto",
-          justifyContent: "center"
+          justifyContent: "center",
+          boxSizing: "border-box",
+          padding: "0 16px",
         }}>
           {bins.map((bin) => (
             <div
@@ -449,7 +448,8 @@ export default function Apply() {
               onDragLeave={() => setHoveredBin(null)}
               className="auth-card"
               style={{
-                height: window.innerWidth < 600 ? "110px" : "140px",  // smaller on mobile
+                height: window.innerWidth < 600 ? "120px" : "180px",
+                minHeight: window.innerWidth < 600 ? "110px" : "140px",
                 padding: "16px",
                 display: "flex",
                 flexDirection: "column",
@@ -462,11 +462,13 @@ export default function Apply() {
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
-              <img
-                src={hoveredBin === bin.type ? bin.open : bin.closed}
-                alt={bin.name}
-                style={{ width: "60%", height: "auto", objectFit: "contain" }}
-              />
+              <div style={{ width: "130px", height: "130px", flexShrink: 0, overflow: "hidden" }}>
+                <img
+                  src={hoveredBin === bin.type ? bin.open : bin.closed}
+                  alt={bin.name}
+                  style={{ width: "130px", height: "130px", objectFit: "contain", display: "block" }}
+                />
+              </div>
               <div style={{
                 fontSize: "0.8rem",
                 color: "var(--text-dim)",

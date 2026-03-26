@@ -358,7 +358,7 @@ export default function Apply() {
 
       <main className="welcome-layout" style={{ zIndex: 10 }}>
         <h1 className="auth-title" style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
-          BIN.IT — APPLY
+          BIN-IT APPLY
         </h1>
 
         <div style={{ display: "flex", gap: "2rem", marginBottom: "1.5rem", alignItems: "center" }}>

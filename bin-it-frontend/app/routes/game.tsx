@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import "../app.css"; 
+const backendUrl = "http://localhost:8080";
 
 // Bin Images
 import blackBinClosed from "../images/trashCans/blackBinClosed.png"
@@ -196,7 +197,7 @@ export default function Game() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/waste/random/arcade", {
+    fetch(`${backendUrl}/waste/random/arcade`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
@@ -230,7 +231,7 @@ export default function Game() {
     try {
       isSubmitting.current = true;
 
-      const res = await fetch("http://localhost:8080/game/arcade/submit", {
+      const res = await fetch(`${backendUrl}/game/arcade/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -436,25 +437,30 @@ export default function Game() {
         </div>
 
         {/* WASTE BINS GRID */}
+        {/* WASTE BINS GRID */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "4%",
-          width: "90%",
+          gridTemplateColumns: window.innerWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+          gap: "7%",
+          width: "100%",
+          maxWidth: window.innerWidth < 600 ? "360px" : "600px",
           margin: "0 auto",
-          justifyContent: "center"
+          justifyContent: "center",
+          boxSizing: "border-box",
+          padding: "0 16px",
         }}>
           {bins.map((bin) => (
             <div
               key={bin.type}
-              data-bin-type={bin.type}  
+              data-bin-type={bin.type}
               onDrop={(e) => handleDrop(e, bin.type)}
               onDragOver={(e) => { allowDrop(e); setHoveredBin(bin.type); }}
               onDragLeave={() => setHoveredBin(null)}
               className="auth-card"
               style={{
-                height: "140px",
-                padding: "20px",
+                height: window.innerWidth < 600 ? "120px" : "180px",
+                minHeight: window.innerWidth < 600 ? "110px" : "140px",
+                padding: "16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
@@ -466,11 +472,14 @@ export default function Game() {
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
-              <img
-                src={hoveredBin === bin.type ? bin.open : bin.closed}
-                alt={bin.name}
-                style={{ width: "60%", height: "auto", objectFit: "contain" }}
-              />
+              <div style={{ width: "130px", height: "130px", flexShrink: 0, overflow: "hidden" }}>
+                <img
+                  src={hoveredBin === bin.type ? bin.open : bin.closed}
+                  alt={bin.name}
+                  style={{ width: "130px", height: "130px", objectFit: "contain", display: "block" }}
+                />
+              </div>
+
               <div style={{
                 fontSize: "0.8rem",
                 color: "var(--text-dim)",

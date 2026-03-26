@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import "../app.css"; 
-const backendUrl = "http://localhost:8080";
+
+import { BACKEND_ADDRESS } from "../api/api.config";
 
 // Bin Images
 import blackBinClosed from "../images/trashCans/blackBinClosed.png"
@@ -197,7 +198,7 @@ export default function Game() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`${backendUrl}/waste/random/arcade`, {
+    fetch(`${BACKEND_ADDRESS}/waste/random/arcade`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
@@ -231,7 +232,7 @@ export default function Game() {
     try {
       isSubmitting.current = true;
 
-      const res = await fetch(`${backendUrl}/game/arcade/submit`, {
+      const res = await fetch(`${BACKEND_ADDRESS}/game/arcade/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

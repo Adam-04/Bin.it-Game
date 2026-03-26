@@ -174,6 +174,9 @@ const wasteItems: WasteItem[] = [
 export default function Game() {
   const navigate = useNavigate();
 
+  // Ensures API is only called once.
+  const isSubmitting = useRef(false);
+
   const [currentItem, setCurrentItem] = useState<WasteItem>(
     wasteItems[Math.floor(Math.random() * wasteItems.length)]
   );
@@ -221,9 +224,12 @@ export default function Game() {
     console.log("userId:", userId);  // add this
     console.log("token:", token);    // add this
 
+    if(isSubmitting.current) return; // Prevent multiple submissions
     if (!userId || !token) return;
 
     try {
+      isSubmitting.current = true;
+
       const res = await fetch("http://localhost:8080/game/arcade/submit", {
         method: "POST",
         headers: {
@@ -239,10 +245,12 @@ export default function Game() {
       if (!res.ok) {
         const text = await res.text();
         console.error("Score submit failed:", text);
+        isSubmitting.current = false; // allow retrying
       }
 
     } catch (err) {
       console.error("Score submission error:", err);
+      isSubmitting.current = false;
     }
   }
 

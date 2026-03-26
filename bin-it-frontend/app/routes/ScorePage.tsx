@@ -23,8 +23,30 @@ export default function ScoreScreen() {
       const loadData = async () => {
         try {
           setIsLoading(true);
-          const data = await scoreApi.getLeaderboard(10);
-          setLeaderboard(data);
+          const rawData = await scoreApi.getLeaderboard(10);
+
+          // Create a map to store only the highest score per user.
+          const uniqueScoresMap = new Map<string, LeaderboardEntry>();
+
+          rawData.forEach((entry) => {
+            const existingEntry = uniqueScoresMap.get(entry.userId);
+            if (!existingEntry || entry.score > existingEntry.score) {
+              uniqueScoresMap.set(entry.userId, entry);
+            }
+          });
+
+          // Covert map back to array and sort by score descending, and 
+          // only take the top 10 scores.
+          const sortedUniqueData = Array.from(uniqueScoresMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10)
+
+            // Add rank based on sorted order
+            .map((entry, index) => ({ ...entry, rank: index + 1 
+
+            })); 
+
+          setLeaderboard(sortedUniqueData);
         } catch (err) {
           setError("Failed to load leaderboard.");
         } finally {

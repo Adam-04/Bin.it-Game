@@ -1,5 +1,5 @@
 // services/score.ts
-const BASE_URL = "http://localhost:8080";
+import { BACKEND_ADDRESS } from "./api.config";
 
 export interface LeaderboardEntry {
   rank: number;
@@ -14,7 +14,7 @@ export const scoreApi = {
     const token = localStorage.getItem("token");
 
     // 2. Add the Authorization header to the fetch call
-    const response = await fetch(`http://localhost:8080/leaderboard?limit=${limit}`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/leaderboard?limit=${limit}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

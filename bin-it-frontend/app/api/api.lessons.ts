@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:8080";
-
+import { BACKEND_ADDRESS } from "./api.config";
 /**
  * The backend 'SecurityConfig' requires the Authorization header for all requests.
  * - Authorization: Bearer token for user authentication (JWT)
@@ -13,7 +12,7 @@ const getAuthHeaders = () => ({
 export const lessonApi = {
   // GET - Fetches all rows from the lessons table
   getAllLessons: async () => {
-    const response = await fetch(`${BASE_URL}/lessons`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/lessons`, {
       headers: getAuthHeaders(),
       credentials: "include"
     });
@@ -23,7 +22,7 @@ export const lessonApi = {
 
   // GET - Returns the progress list for the user
   getUserProgress: async (userId: string) => {
-    const response = await fetch(`${BASE_URL}/progress/${userId}`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/progress/${userId}`, {
       headers: getAuthHeaders(),
       credentials: "include"
     });
@@ -33,12 +32,23 @@ export const lessonApi = {
 
   // POST - Updates the database when user marks a lesson as complete
   markComplete: async (userId: string, lessonId: string) => {
-    const response = await fetch(`${BASE_URL}/progress/${userId}/complete/${lessonId}`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/progress/${userId}/complete/${lessonId}`, {
       method: "POST",
       headers: getAuthHeaders(),
       credentials: "include"
     });
     if (!response.ok) throw new Error("Failed to update database");
     return response.json();
-  }
+  },
+  
+  // GET - Returns ONLY the completed lessons for the user
+  getCompletedLessons: async (userId: string) => {
+    const response = await fetch(`${BACKEND_ADDRESS}/progress/${userId}/completed`, {
+      headers: getAuthHeaders(),
+      credentials: "include"
+    });
+    if (!response.ok) throw new Error("Failed to fetch completed lessons");
+    return response.json();
+  },
+
 };

@@ -11,6 +11,7 @@ export default [
     // Main pages
     route("home", "routes/home.tsx"),
     route("game", "routes/game.tsx"), // Added from origin/frontend
+    route("apply", "routes/apply.tsx"),
 
     // Score
     route("score/:mode", "routes/ScorePage.tsx"),

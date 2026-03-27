@@ -1,9 +1,9 @@
-const BASE_URL = "http://localhost:8080/auth";
+import { BACKEND_ADDRESS } from "./api.config";
 
 export const authApi = {
   // Login logic
   login: async (username: string, password: string) => {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -17,7 +17,7 @@ export const authApi = {
 
   // Registering an account Logic
   register: async (username: string, email: string, password: string) => {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const response = await fetch(`${BACKEND_ADDRESS}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),

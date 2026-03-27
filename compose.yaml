@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: bin-it-frontend-frontend
+    image: bin-it-frontend
     expose:
       - "3000"
 

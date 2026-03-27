@@ -6,11 +6,6 @@ import { BACKEND_ADDRESS } from "../api/api.config";
 
 import { wasteItems, bins } from "../data/lessonImages";
 
-const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
-useEffect(() => {
-  setScreenWidth(window.innerWidth);
-}, []);
 
 type WasteItem = {
   name: string;
@@ -26,7 +21,7 @@ wasteItems.forEach((item) => {
   imageMap[`${folder}/${filename}`] = item.image;
 });
 
-// CSRF helper (unchanged)
+// CSRF helper
 function getCsrfToken(): string {
   return (
     document.cookie
@@ -39,6 +34,15 @@ function getCsrfToken(): string {
 export default function Game() {
   const navigate = useNavigate();
   const isSubmitting = useRef(false);
+  const [screenWidth, setScreenWidth] = useState(
+  typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [currentItem, setCurrentItem] = useState<WasteItem>(
     wasteItems[Math.floor(Math.random() * wasteItems.length)]
@@ -307,10 +311,10 @@ export default function Game() {
           style={{
             display: "grid",
             gridTemplateColumns:
-              window.innerWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+              screenWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
             gap: "7%",
             width: "100%",
-            maxWidth: window.innerWidth < 600 ? "360px" : "600px",
+            maxWidth: screenWidth < 600 ? "360px" : "600px",
             margin: "0 auto",
             justifyContent: "center",
             boxSizing: "border-box",

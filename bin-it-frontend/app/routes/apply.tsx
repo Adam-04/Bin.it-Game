@@ -253,7 +253,8 @@ export default function Apply() {
             fontSize: "60px",
             cursor: gameActive ? "grab" : "default",
             opacity: touchPos ? 0 : 1,
-            transition: "opacity 0.1s"
+            transition: "opacity 0.1s",
+            touchAction: "none",
           }}
         >
           <img

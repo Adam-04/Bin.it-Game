@@ -1,5 +1,6 @@
 package online.binit.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import online.binit.dto.AuthResponse;
@@ -8,7 +9,6 @@ import online.binit.dto.RegisterRequest;
 import online.binit.model.UserDetail;
 import online.binit.repository.UserRepository;
 import online.binit.security.JwtUtil;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class AuthService {
@@ -37,12 +37,12 @@ public class AuthService {
         newUser.setUsername(request.getUsername());
         newUser.setEmail(request.getEmail());
         newUser.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        
+        UserDetail savedUser = userRepository.save(newUser);
 
-        userRepository.save(newUser);
+        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getUsername());
 
-        String token = jwtUtil.generateToken(newUser.getId(), newUser.getUsername());
-
-        return new AuthResponse(newUser.getId(), newUser.getUsername(), token, "User registered successfully");
+        return new AuthResponse(savedUser.getId(), savedUser.getUsername(), token, "User registered successfully");
     }
 
     public AuthResponse login(LoginRequest request) {

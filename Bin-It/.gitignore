@@ -37,4 +37,3 @@ build/
 
 # Docker image build artifacts
 *.tar.gz
-

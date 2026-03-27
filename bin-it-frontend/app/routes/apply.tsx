@@ -4,64 +4,7 @@ import "../app.css";
 
 import { BACKEND_ADDRESS } from "../api/api.config";
 
-
-// Bin Images
-import blackBinClosed from "../images/trashCans/blackBinClosed.png"
-import blackBinOpen from "../images/trashCans/blackBinOpen.png"
-import blueBinClosed from "../images/trashCans/blueBinClosed.png"
-import blueBinOpen from "../images/trashCans/blueBinOpen.png"
-import greenBinClosed from "../images/trashCans/greenBinClosed.png"
-import greenBinOpen from "../images/trashCans/greenBinOpen.png"
-import hazardBinClosed from "../images/trashCans/specialBinClosed.png"
-import hazardBinOpen from "../images/trashCans/specialBinOpen.png"
-
-// trash item images
-import styrofoam from "../images/garbageImages/trash/styrofoamPlate.png"
-import babyWipes from "../images/garbageImages/trash/babyWipes.png"
-import brick from "../images/garbageImages/trash/brickAndTextiles.png"
-import clinicalMask from "../images/garbageImages/trash/clinicalMask.png"
-import diaper from "../images/garbageImages/trash/diaper.png"
-import fastFoodCup from "../images/garbageImages/trash/disposableFastfoodCup.png"
-import garbageBag from "../images/garbageImages/trash/garbageBag.png"
-import sponges from "../images/garbageImages/trash/sponges.png"
-import toothpaste from "../images/garbageImages/trash/toothpaste.png"
-import waterhose from "../images/garbageImages/trash/waterHose.png"
-
-// recycling item images
-import glassBottle from "../images/garbageImages/recycling/glassJar.png"
-import paper from "../images/garbageImages/recycling/crumpledPaper.png"
-import plasticBottle from "../images/garbageImages/recycling/plasticBottle.png"
-import cardboardBox from "../images/garbageImages/recycling/cardboardBox.png"
-import detergentBottle from "../images/garbageImages/recycling/detergentBottle.png"
-import eggCarton from "../images/garbageImages/recycling/eggCartoon.png"
-import foilTray from "../images/garbageImages/recycling/foilTray.png"
-import foodCan from "../images/garbageImages/recycling/foodCan.png"
-import newsPaper from "../images/garbageImages/recycling/newspaper.png"
-import wineBottle from "../images/garbageImages/recycling/wineBottle.png"
-
-// compost item images
-import appleCore from "../images/garbageImages/compost/appleCore.png"
-import bananaPeel from "../images/garbageImages/compost/bananaPeel.png"
-import coffeeGrounds from "../images/garbageImages/compost/coffeeGrounds.png"
-import deadLeaves from "../images/garbageImages/compost/deadLeaves.png"
-import eggShells from "../images/garbageImages/compost/eggshells.png"
-import friedChickenBones from "../images/garbageImages/compost/friedChickenBones.png"
-import leftoverTakeout from "../images/garbageImages/compost/leftoverTakeout.png"
-import moldyCheese from "../images/garbageImages/compost/moldyCheese.png"
-import oldFlowers from "../images/garbageImages/compost/oldFlowers.png"
-import yardRemains from "../images/garbageImages/compost/yardRemains.png"
-
-// hazardous item images
-import paintCan from "../images/garbageImages/special/paintBucket.png"
-import battery from "../images/garbageImages/special/batteries.png"
-import laptop from "../images/garbageImages/special/brokenLaptop.png"
-import phone from "../images/garbageImages/special/brokenPhone.png"
-import carBattery from "../images/garbageImages/special/carBattery.png"
-import gasCylinder from "../images/garbageImages/special/gasCylinder.png"
-import lightbulb from "../images/garbageImages/special/lightbulb.png"
-import motorOil from "../images/garbageImages/special/motorOil.png"
-import pesticide from "../images/garbageImages/special/pesticide.png"
-import sprayCan from "../images/garbageImages/special/sprayCan.png"
+import { wasteItems, bins } from "../data/lessonImages";
 
 type WasteItem = {
   name: string;
@@ -71,105 +14,21 @@ type WasteItem = {
 
 const ROUND_SIZE = 10;
 
-const bins = [
-  { type: "trash",     name: "Trash",     closed: blackBinClosed,  open: blackBinOpen  },
-  { type: "recycling", name: "Recycling", closed: blueBinClosed,   open: blueBinOpen   },
-  { type: "compost",   name: "Compost",   closed: greenBinClosed,  open: greenBinOpen  },
-  { type: "special",   name: "Hazardous", closed: hazardBinClosed, open: hazardBinOpen },
-];
 
-const imageMap: Record<string, string> = {
-  "trash/styrofoamPlate":        styrofoam,
-  "trash/babyWipes":             babyWipes,
-  "trash/brickAndTextiles":      brick,
-  "trash/clinicalMask":          clinicalMask,
-  "trash/diaper":                diaper,
-  "trash/disposableFastfoodCup": fastFoodCup,
-  "trash/garbageBag":            garbageBag,
-  "trash/sponges":               sponges,
-  "trash/toothpaste":            toothpaste,
-  "trash/waterHose":             waterhose,
-  "recycling/glassJar":          glassBottle,
-  "recycling/crumpledPaper":     paper,
-  "recycling/plasticBottle":     plasticBottle,
-  "recycling/cardboardBox":      cardboardBox,
-  "recycling/detergentBottle":   detergentBottle,
-  "recycling/eggCartoon":        eggCarton,
-  "recycling/foilTray":          foilTray,
-  "recycling/foodCan":           foodCan,
-  "recycling/newspaper":         newsPaper,
-  "recycling/wineBottle":        wineBottle,
-  "compost/appleCore":           appleCore,
-  "compost/bananaPeel":          bananaPeel,
-  "compost/coffeeGrounds":       coffeeGrounds,
-  "compost/deadLeaves":          deadLeaves,
-  "compost/eggshells":           eggShells,
-  "compost/friedChickenBones":   friedChickenBones,
-  "compost/leftoverTakeout":     leftoverTakeout,
-  "compost/moldyCheese":         moldyCheese,
-  "compost/oldFlowers":          oldFlowers,
-  "compost/yardRemains":         yardRemains,
-  "special/paintBucket":         paintCan,
-  "special/batteries":           battery,
-  "special/brokenLaptop":        laptop,
-  "special/brokenPhone":         phone,
-  "special/carBattery":          carBattery,
-  "special/gasCylinder":         gasCylinder,
-  "special/lightbulb":           lightbulb,
-  "special/motorOil":            motorOil,
-  "special/pesticide":           pesticide,
-  "special/sprayCan":            sprayCan,
-};
+const imageMap: Record<string, string> = {};
+wasteItems.forEach((item) => {
+  const lastSeg = item.image.split("/").pop()?.replace(".png", "") ?? "";
+  const folder =
+    item.type === "trash"
+      ? "trash"
+      : item.type === "recycling"
+      ? "recycling"
+      : item.type === "compost"
+      ? "compost"
+      : "special";
 
-const wasteItems: WasteItem[] = [
-  // Trash
-  { name: "Styrofoam Plate",   type: "trash", image: styrofoam     },
-  { name: "Baby Wipes",        type: "trash", image: babyWipes     },
-  { name: "Brick & Textiles",  type: "trash", image: brick         },
-  { name: "Clinical Mask",     type: "trash", image: clinicalMask  },
-  { name: "Diaper",            type: "trash", image: diaper        },
-  { name: "Fast Food Cup",     type: "trash", image: fastFoodCup   },
-  { name: "Garbage Bag",       type: "trash", image: garbageBag    },
-  { name: "Sponges",           type: "trash", image: sponges       },
-  { name: "Toothpaste",        type: "trash", image: toothpaste    },
-  { name: "Water Hose",        type: "trash", image: waterhose     },
-
-  // Recycling
-  { name: "Glass Jar",         type: "recycling", image: glassBottle      },
-  { name: "Crumpled Paper",    type: "recycling", image: paper            },
-  { name: "Plastic Bottle",    type: "recycling", image: plasticBottle    },
-  { name: "Cardboard Box",     type: "recycling", image: cardboardBox     },
-  { name: "Detergent Bottle",  type: "recycling", image: detergentBottle  },
-  { name: "Egg Carton",        type: "recycling", image: eggCarton        },
-  { name: "Foil Tray",         type: "recycling", image: foilTray         },
-  { name: "Food Can",          type: "recycling", image: foodCan          },
-  { name: "Newspaper",         type: "recycling", image: newsPaper        },
-  { name: "Wine Bottle",       type: "recycling", image: wineBottle       },
-
-  // Compost
-  { name: "Apple Core",        type: "compost", image: appleCore          },
-  { name: "Banana Peel",       type: "compost", image: bananaPeel         },
-  { name: "Coffee Grounds",    type: "compost", image: coffeeGrounds      },
-  { name: "Dead Leaves",       type: "compost", image: deadLeaves         },
-  { name: "Egg Shells",        type: "compost", image: eggShells          },
-  { name: "Chicken Bones",     type: "compost", image: friedChickenBones  },
-  { name: "Leftover Takeout",  type: "compost", image: leftoverTakeout    },
-  { name: "Moldy Cheese",      type: "compost", image: moldyCheese        },
-  { name: "Old Flowers",       type: "compost", image: oldFlowers         },
-  { name: "Yard Remains",      type: "compost", image: yardRemains        },
-
-  // Hazardous
-  { name: "Paint Can",         type: "special", image: paintCan     },
-  { name: "Battery",           type: "special", image: battery      },
-  { name: "Broken Laptop",     type: "special", image: laptop       },
-  { name: "Broken Phone",      type: "special", image: phone        },
-  { name: "Car Battery",       type: "special", image: carBattery   },
-  { name: "Gas Cylinder",      type: "special", image: gasCylinder  },
-  { name: "Lightbulb",         type: "special", image: lightbulb    },
-  { name: "Motor Oil",         type: "special", image: motorOil     },
-  { name: "Pesticide",         type: "special", image: pesticide    },
-  { name: "Spray Can",         type: "special", image: sprayCan     },
-];
+  imageMap[`${folder}/${lastSeg}`] = item.image;
+});
 
 export default function Apply() {
   const navigate = useNavigate();
@@ -193,15 +52,22 @@ export default function Apply() {
     fetch(`${BACKEND_ADDRESS}/waste/random/apply`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data: { garbageType: string; path: string }[]) => {
         const mapped: WasteItem[] = data
           .map((item) => ({
-            name: item.path.split("/").pop()!.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase()).trim(),
+            name: item.path.split("/").pop()!
+              .replace(/([A-Z])/g, " $1")
+              .replace(/^./, (c) => c.toUpperCase())
+              .trim(),
             type: item.garbageType,
             image: imageMap[item.path] ?? "",
           }))
           .filter((item) => item.image !== "");
+
         if (mapped.length > 0) {
           const shuffled = [...mapped].sort(() => Math.random() - 0.5).slice(0, ROUND_SIZE);
           setQueue(shuffled);
@@ -213,7 +79,7 @@ export default function Apply() {
 
   async function submitScore(finalScore: number): Promise<void> {
     const userId = localStorage.getItem("userId");
-    const token  = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (isSubmitting.current || !userId || !token) return;
 
     try {
@@ -226,6 +92,7 @@ export default function Apply() {
         },
         body: JSON.stringify({ userId, score: finalScore }),
       });
+
       if (!res.ok) {
         const text = await res.text();
         console.error("Score submit failed:", text);
@@ -366,7 +233,6 @@ export default function Apply() {
           <h2 className="leaderboard-title" style={{ margin: 0 }}>Item: {index + 1}/{ROUND_SIZE}</h2>
         </div>
 
-        {/* ACTIVE WASTE ITEM CARD */}
         <div
           draggable={gameActive}
           onDragStart={handleDragStart}
@@ -390,13 +256,16 @@ export default function Apply() {
             transition: "opacity 0.1s"
           }}
         >
-          <img src={currentItem.image} style={{ width: "100%", height: "100%", objectFit: "fill" }} alt={currentItem.name} />
+          <img
+            src={currentItem.image}
+            style={{ width: "100%", height: "100%", objectFit: "fill" }}
+            alt={currentItem.name}
+          />
           <div style={{ fontSize: "1rem", color: "var(--text-dim)", marginTop: "10px", fontWeight: "bold" }}>
             {currentItem.name}
           </div>
         </div>
 
-        {/* GHOST IMAGE follows finger during touch drag */}
         {touchPos && (
           <img
             src={currentItem.image}
@@ -415,7 +284,6 @@ export default function Apply() {
           />
         )}
 
-        {/* FEEDBACK */}
         <div style={{ height: "40px", marginBottom: "1rem" }}>
           {feedback && (
             <p className="click-prompt" style={{
@@ -428,24 +296,28 @@ export default function Apply() {
           )}
         </div>
 
-        {/* WASTE BINS GRID — only changes: added padding/boxSizing to main, and capped grid width */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: window.innerWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-          gap: "7%",
-          width: "100%",
-          maxWidth: window.innerWidth < 600 ? "360px" : "600px",
-          margin: "0 auto",
-          justifyContent: "center",
-          boxSizing: "border-box",
-          padding: "0 16px",
-        }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: window.innerWidth < 600 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+            gap: "7%",
+            width: "100%",
+            maxWidth: window.innerWidth < 600 ? "360px" : "600px",
+            margin: "0 auto",
+            justifyContent: "center",
+            boxSizing: "border-box",
+            padding: "0 16px",
+          }}
+        >
           {bins.map((bin) => (
             <div
               key={bin.type}
               data-bin-type={bin.type}
               onDrop={(e) => handleDrop(e, bin.type)}
-              onDragOver={(e) => { allowDrop(e); setHoveredBin(bin.type); }}
+              onDragOver={(e) => {
+                allowDrop(e);
+                setHoveredBin(bin.type);
+              }}
               onDragLeave={() => setHoveredBin(null)}
               className="auth-card"
               style={{
@@ -470,13 +342,15 @@ export default function Apply() {
                   style={{ width: "130px", height: "130px", objectFit: "contain", display: "block" }}
                 />
               </div>
-              <div style={{
-                fontSize: "0.8rem",
-                color: "var(--text-dim)",
-                textTransform: "uppercase",
-                letterSpacing: "1px",
-                marginTop: "5px"
-              }}>
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  color: "var(--text-dim)",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  marginTop: "5px",
+                }}
+              >
                 {bin.name}
               </div>
             </div>

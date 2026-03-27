@@ -255,6 +255,7 @@ export default function Game() {
             opacity: touchPos ? 0 : 1,
             transition: "opacity 0.1s",
             cursor: gameActive ? "grab" : "default",
+            touchAction: "none",
           }}
         >
           <img

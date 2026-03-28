@@ -3,7 +3,7 @@ An interactive game to help people learn about waste disposal.
 
 ## Local Setup
 ### Setup
-  - Download the code a .zip
+  - Download the code to a .zip
   - Extract all files
   - Run the `db.sql` in your database server
   - Open the project in VScode or navigate to the root directory in terminal

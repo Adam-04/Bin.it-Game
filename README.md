@@ -10,8 +10,8 @@ An interactive game to help people learn about waste disposal.
   - Add your .env file with `DATABASE_URL` (We used Neon but any postgres database will work), `FRONTEND_URL` (Note: ports 5173 and 3000 are already hardcoded into SecurityConfig.java), and `JWT_SECRET` environment variables
 ### Backend
   - Navigate to `/Bin-It`
-  - Run `./mvnw clean install` (or mvnw.cmd for command prompt)
-  - Run the backend using `./mvnw spring-boot:run`
+  - Run `.\mvnw clean install` (or mvnw.cmd for command prompt)
+  - Run the backend using `.\mvnw spring-boot:run`
 ### Frontend
   - Navigate to `/bin-it-frontend`
   - Run `npm install`
